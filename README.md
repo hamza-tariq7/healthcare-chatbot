@@ -30,7 +30,7 @@ The [project presentation](reports/hospital_supply_chain_chatbot_presentation.pp
 | LLM-only mode | **10–15% hallucination on unblocked queries** |
 | Ambiguous queries | **Approximately 40–50% abstention** |
 
-These are project-reported figures. See the presentation and [evaluation context](docs/technical_notes.md) for their scope.
+
 
 ## The problem
 
