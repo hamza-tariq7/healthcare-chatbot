@@ -1,3 +1,5 @@
+> Historical context: this document describes the original recorded analysis. The current notebook contains code corrections; see [revision notes](revision_notes.md). Published benchmark figures have not been replaced by a rerun.
+
 # Implementation and evaluation context
 
 ## Project-reported outcomes

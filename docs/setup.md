@@ -1,53 +1,35 @@
-# Setup and reproduction
+# Run the prototype
 
-## Quick start: generate synthetic data
+## 1. Work from the repository root
 
-The command-line generator is adapted from the supplied dataset notebook. It requires pandas and NumPy. From the repository root:
+Clone the existing healthcare-chatbot repository and open Jupyter from its root. If your notebook runtime uses another working directory, set CHATBOT_PROJECT_DIR to the checkout root before running the first setup cell. In Colab, use a checkout in the runtime and set that same variable; mounting Drive is optional if you store the corpus there.
+
+## 2. Generate synthetic records
 
 ```bash
 python scripts/generate_synthetic_data.py --output data/generated
 ```
 
-Defaults are 8,000 catalog records, 80 locations, 200,000 lots, and one contract per catalog record. The script uses seed 42 and a fixed simulation date of 2026-11-14. It does not access a hospital system or generate patient records.
-
-For a small local demonstration:
+The default configuration creates 8,000 catalog entries, 80 locations, 200,000 lots, and 8,000 contracts. A small example uses:
 
 ```bash
-python scripts/generate_synthetic_data.py --drugs 40 --locations 8 --lots 200 --output data/small
+python scripts/generate_synthetic_data.py --drugs 40 --locations 8 --lots 200 --output data/generated
 ```
 
-Optional arguments include --seed and --as-of YYYY-MM-DD. The original dataset notebook instead uses the execution day's date, so its dates need not match regenerated files. Random synthetic combinations are suitable for software testing, not clinical use.
+The standalone generator has configurable counts, seed, output path, and simulation date. It does not connect to a hospital system. Generated data can contain unrealistic combinations and must not be treated as medication instructions.
 
-## Original Colab workflow
+## 3. Supply the original reference PDFs
 
-The hospital notebook expects a Drive folder named BA840_chatbot with four CSVs directly inside data/ and two PDFs inside corpus/:
+Place authorized copies of orange_book.pdf and ashp_guidelines.pdf in corpus/. The original saved excerpts identify the Orange Book's 2025 edition; the exact ASHP title/edition must be confirmed to reproduce that source. These PDFs were not supplied in the attachments and are not redistributed here.
 
-| Directory | Required files |
-| --- | --- |
-| data/ | drug_master.csv, inventory_lots.csv, locations.csv, cost_contracts.csv |
-| corpus/ | orange_book.pdf, ashp_guidelines.pdf |
+## 4. Run notebook cells in order
 
-Generate the four CSVs into your chosen data directory, obtain authorized copies of the original reference PDFs, and update BASE_DIR in the notebook. The corpus PDFs and raw runs.csv were not supplied with the attachments and are not bundled here. A current Orange Book edition may produce different chunks from the original 2025 corpus. The exact ASHP document/edition must be confirmed to reproduce the historical corpus.
+Install requirements.txt in your intended runtime. The first setup cell checks file availability and loads data/generated/ when present, otherwise data/. The corpus cell now defines its own PDF formatter, catalog resolver, and overlapping chunker before the answer tests.
 
-Install the main requirements in the intended notebook runtime. Mode 2 downloads Qwen/Qwen2.5-1.5B-Instruct; the saved log reports approximately 3.09 GB of model weights. A GPU is useful but the hospital model-loading code also selects a CPU dtype. The separate reference demo explicitly requires a GPU.
+The catalog resolver uses supplied names; no RxNorm service is called. Unknown brand names need an appropriate source mapping or a query using an existing catalog name/identifier. Mode 1 formats retrieved data with deterministic templates. Mode 2 requires network access to the Qwen2.5-1.5B-Instruct weights and adequate runtime memory. The separate references/ demonstration has additional dependencies.
 
-## Fresh-kernel dependencies to resolve
+## Verification status
 
-The source notebook is a saved prototype, not a packaged end-to-end application. Its successful historical outputs depend on state not fully defined in the supplied cells:
+Notebook syntax, corrected helper behavior, explicit-ID operational/cost queries, name matching, PDF formatting, and chunk overlap were checked using synthetic fixtures. The portable generator's small configuration was also checked in the earlier package. The full PDF index, model inference, and benchmark were not rerun. Current notebook outputs are cleared. The recorded source outputs remain in archive/hospital_chatbot_portfolio_v1.ipynb.
 
-- format_mode0_pdf is called but not defined.
-- Mode 0's natural-language resolution calls normalize_term_to_ingredients before the later fallback is introduced. The supplied fallback only returns the input; it does not implement RxNorm normalization.
-- The saved Advil example resolves to ibuprofen, but the included fallback alone does not reproduce that mapping.
-- The operating-data folder generated by the source dataset notebook differs from the chatbot's expected folder. Copy files or update BASE_DIR/DATA_DIR explicitly.
-
-Restore the missing helpers and any original normalization module before claiming a complete fresh-kernel reproduction. The portfolio edition retains the original analytical code rather than silently replacing those components with a different system.
-
-## Reference demonstration
-
-references/concussion_rag_demo.ipynb is a separate supplied demonstration. It uses CDC pages, MiniLM embeddings, FAISS retrieval, and a Qwen model to illustrate a different domain. Its dependencies are listed separately in references/requirements.txt. It is not included in the hospital evaluation counts or project-reported outcomes.
-
-## Checks completed for this package
-
-The project notebooks were checked for JSON structure and code-cell syntax. The portable data generator was run with a small configuration and its row counts, identifiers, foreign keys, and expected columns were checked. The source presentation and reference notebooks retain identical bytes. Internal file links and the package archive were checked.
-
-The full 200,000-lot generator configuration, document index, Qwen inference, and historical evaluation were not rerun for this portfolio update.
+See docs/revision_notes.md for changes and docs/technical_notes.md for the original implementation and project-reported results.
