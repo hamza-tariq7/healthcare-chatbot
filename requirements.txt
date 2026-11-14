@@ -1,0 +1,10 @@
+# Main project; package names, not a pinned historical environment.
+pandas
+numpy
+scikit-learn
+pymupdf
+torch
+transformers
+accelerate
+ipython
+jupyterlab

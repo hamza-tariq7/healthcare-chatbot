@@ -1,0 +1,29 @@
+{
+  "source": "Saved outputs and evaluation loop in BA_840_Chatbot.ipynb",
+  "prompt_count": 30,
+  "categories": {
+    "NORMAL": 10,
+    "AMBIGUOUS": 10,
+    "ADVERSARIAL": 10
+  },
+  "saved_run_count": 180,
+  "calls_per_mode": {
+    "MODE0": 60,
+    "MODE1": 60,
+    "MODE2": 60
+  },
+  "mode0_k_values": [
+    3,
+    8
+  ],
+  "recorded_temperature_labels": [
+    0.0,
+    0.7
+  ],
+  "actual_mode2_temperature": 0.2,
+  "mode1_temperature_applied": false,
+  "mode2_recorded_temperature_applied": false,
+  "document_chunks_in_saved_run": 6383,
+  "scoring": "Rule-based assignments in auto_score; not content-validated accuracy or hallucination rates",
+  "raw_runs_csv_included": false
+}

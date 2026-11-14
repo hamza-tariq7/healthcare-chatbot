@@ -1,0 +1,8 @@
+# Additional packages used by the separate supplied reference demo.
+requests
+beautifulsoup4
+lxml
+sentence-transformers
+faiss-cpu
+tqdm
+matplotlib
